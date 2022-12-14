@@ -6,15 +6,16 @@ class person:
         print(self.fname, self.lname)
 
 class student(person):
-    def __init__(self, fname, lname, year):
-        super().__init__(fname, lname)
+    def __init__(self, fname, year):
+        super().__init__(fname)
         self.grad_year = year
     def welcome(self):
-        print("welcome", self.fname, self.lname, "class of", self.grad_year)
+        print("welcome", self.fname, "class of", self.grad_year)
 
 
-p1= student("sam", "anders", 2023)
+p1= student("sam", 2023)
 p1.print_name()
 p1.welcome()
+
 
 
