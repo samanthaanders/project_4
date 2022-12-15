@@ -67,13 +67,15 @@ class player:
         return random.randint(1,4)
 
 class enemy:
-    def __init__(self, name, strength, health, num, money, reward):
+    def __init__(self, name, strength, health, num, money, reward, player):
         self.name = name
         self.strength = strength
         self.health = health
         self.num = num
         self.money = money
         self.reward = reward
+        self.agg_player = player
+
     def take_damage(self, num, damage, name):
         print(name, "attacked!")
         if (self.num == num):
@@ -87,20 +89,28 @@ class enemy:
             print("the attack was weak")
         else:
             print("the attack failed!")
+   
     def check_health(self):
         if (self.health <= 0):
             print(self.name,"lost!")
         else:
             print(self.name + "'s health is: ", self.health)
-    def attack(self):
-        return random.randint(1,4)
 
+    def attack(self):
+        return self.agg_player.attack() # aggregation to reuse the player class's attack method
+    
 class item:
     def __init__(self, name, cost, uses, desc):
         self.name = name
         self.cost = cost
         self.uses = uses
         self.desc = desc
+
+class special_item(item): # inheritance 
+    def __init__(self, name, cost, uses, desc):
+        super().__init__(name, cost, uses, desc)
+    def new_method(self):
+        None
 
 # sets the player's name and creates the player object
 name = input("what is your name? \n")
@@ -118,10 +128,10 @@ playing = True
 
 while playing == True:
     # creates all the objects
-    e1 = enemy("small " + enemy_names[(random.randint(0,4))] + " monster", 3, 5, (random.randint(1,4)), 3, 1)
-    e2 = enemy(enemy_names[(random.randint(0,4))] + " monster", 5, 5, (random.randint(1,4)), 9, 3)
-    e3 = enemy(enemy_names[(random.randint(0,4))] + " monster", 5, 10, (random.randint(1,4)), 15, 5)
-    boss = enemy("big "+ enemy_names[(random.randint(0,4))] + " monster", 8, 15, (random.randint(1,4)), 50, 10) 
+    e1 = enemy("small " + enemy_names[(random.randint(0,4))] + " monster", 3, 5, (random.randint(1,4)), 3, 1, p1)
+    e2 = enemy(enemy_names[(random.randint(0,4))] + " monster", 5, 5, (random.randint(1,4)), 9, 3, p1)
+    e3 = enemy(enemy_names[(random.randint(0,4))] + " monster", 5, 10, (random.randint(1,4)), 15, 5, p1)
+    boss = enemy("big "+ enemy_names[(random.randint(0,4))] + " monster", 8, 15, (random.randint(1,4)), 50, 10, p1) 
     strength_potion = item("strength potion", 15, 3, "increases strength by 5. Can be used 3 times.")
     health_potion = item("health potion", 20, 5, "increases health by 5. Can be used 5 times.")
     cookie = item("cookie", 2, 1, "increases health by 3. Can be used once.")
