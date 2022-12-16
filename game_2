@@ -1,6 +1,21 @@
 import random
 import time
 
+class item:
+    def __init__(self, name, cost, uses, desc, amount):
+        self.name = name
+        self.cost = cost
+        self.uses = uses
+        self.desc = desc
+        self.amount = amount
+
+class special_item(item): # inheritance 
+    def __init__(self, name, cost, uses, desc, amount):
+        super().__init__(name, cost, uses, desc, amount)
+    def rand_amount(self):
+        self.amount = random.randint(1,10)
+        return self.amount
+
 class player:
     def __init__(self, name, strength, health, num, money, power):
         self.name = name
@@ -9,6 +24,7 @@ class player:
         self.num = num # used for randomizing damage dealt in attacks
         self.money = money
         self.power = power
+        self.obj_item = special_item(None, 0, 0, None, 1) # composition
     def take_damage(self, num, damage, name):
         print(name, "attacked!")
         if (self.num == num):
@@ -27,38 +43,46 @@ class player:
             print(self.name,"lost!")
         else:
             print(self.name + "'s health is: ", self.health)
-    def use_power(self, uses):
+    def use_power(self, uses, amount):
         if (self.power == "strength potion"):
             if uses > 0:
-                self.strength += 5
+                self.strength += amount
                 print(self.name +"'s strength:", self.strength)
                 print(self.power +" uses left: ",(uses - 1))
             else:
                 print(self.power + " has been used up")
         elif (self.power == "health potion"):
             if uses > 0:
-                self.health += 5
+                self.health += amount
                 print(self.name +"'s health:", self.health)
                 print(self.power +" uses left: ",(uses - 1))
             else:
                 print(self.power + " has been used up")
         elif (self.power == "cookie"):
             if uses > 0:
-                self.health += 3
+                self.health += amount
                 print(self.name +"'s health:", self.health)
                 print(self.power +" uses left: ",(uses - 1))
             else:
                 print(self.power + " has been used up")
         elif (self.power == "sword"):
             if uses > 0:
-                self.strength += 5
+                self.strength += amount
                 print(self.name +"'s strength:", self.strength)
                 print(self.power +" uses left: ",(uses - 1))
             else:
                 print(self.power + " has already been equipped")
         elif (self.power == "health spell"):
             if uses > 0:
-                self.health += 7
+                self.health += amount
+                print(self.name +"'s health:", self.health)
+                print(self.power +" uses left: ",(uses - 1))
+            else:
+                print(self.power + " has been used up")
+        elif (self.power == "luck potion"):
+            if uses > 0:
+                amount = self.obj_item.rand_amount() # composition to use method of "special_item" class
+                self.health += amount
                 print(self.name +"'s health:", self.health)
                 print(self.power +" uses left: ",(uses - 1))
             else:
@@ -99,18 +123,6 @@ class enemy:
     def attack(self):
         return self.agg_player.attack() # aggregation to reuse the player class's attack method
     
-class item:
-    def __init__(self, name, cost, uses, desc):
-        self.name = name
-        self.cost = cost
-        self.uses = uses
-        self.desc = desc
-
-class special_item(item): # inheritance 
-    def __init__(self, name, cost, uses, desc):
-        super().__init__(name, cost, uses, desc)
-    def new_method(self):
-        None
 
 # sets the player's name and creates the player object
 name = input("what is your name? \n")
@@ -132,11 +144,13 @@ while playing == True:
     e2 = enemy(enemy_names[(random.randint(0,4))] + " monster", 5, 5, (random.randint(1,4)), 9, 3, p1)
     e3 = enemy(enemy_names[(random.randint(0,4))] + " monster", 5, 10, (random.randint(1,4)), 15, 5, p1)
     boss = enemy("big "+ enemy_names[(random.randint(0,4))] + " monster", 8, 15, (random.randint(1,4)), 50, 10, p1) 
-    strength_potion = item("strength potion", 15, 3, "increases strength by 5. Can be used 3 times.")
-    health_potion = item("health potion", 20, 5, "increases health by 5. Can be used 5 times.")
-    cookie = item("cookie", 2, 1, "increases health by 3. Can be used once.")
-    sword = item("sword", 8, 1, "increases strength by 5. Can be used once.")
-    health_spell = item("health spell", 50, 10, "increases health by 7. Can be used 10 times.")
+    strength_potion = item("strength potion", 15, 3, "increases strength by 5. Can be used 3 times.", 5)
+    health_potion = item("health potion", 20, 5, "increases health by 5. Can be used 5 times.", 5)
+    cookie = item("cookie", 2, 1, "increases health by 3. Can be used once.", 3)
+    sword = item("sword", 8, 1, "increases strength by 5. Can be used once.", 5)
+    health_spell = item("health spell", 50, 10, "increases health by 7. Can be used 10 times.", 7)
+    luck_potion = special_item("luck potion", 1, 10, "increases health by a random amount from 1-10. Can be used 10 times.", 1)
+    #luck_potion.rand_amount()
     
     battling = True
 
@@ -155,7 +169,7 @@ while playing == True:
 
             ans = input("What do you do? \n")
             if (ans == p1.power):
-                p1.use_power(power.uses)
+                p1.use_power(power.uses, power.amount)
                 power.uses -= 1
             elif (ans == "attack"):
                 e.take_damage(p1.attack(), (p1.strength), p1.name)
@@ -194,7 +208,7 @@ while playing == True:
     print(" ")
     ans = input("do you want to enter the shop? \n")
     # sets up the shop
-    shop_items = [strength_potion, health_potion, cookie, sword, health_spell]
+    shop_items = [strength_potion, health_potion, cookie, sword, health_spell, luck_potion]
     if (ans == "yes"):
         print("you have:", p1.money,"coins")
         for x in shop_items:
