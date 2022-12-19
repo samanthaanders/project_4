@@ -143,13 +143,13 @@ while playing == True:
     e1 = enemy("small " + enemy_names[(random.randint(0,4))] + " monster", 3, 5, (random.randint(1,4)), 3, 1, p1)
     e2 = enemy(enemy_names[(random.randint(0,4))] + " monster", 5, 5, (random.randint(1,4)), 9, 3, p1)
     e3 = enemy(enemy_names[(random.randint(0,4))] + " monster", 5, 10, (random.randint(1,4)), 15, 5, p1)
-    boss = enemy("big "+ enemy_names[(random.randint(0,4))] + " monster", 8, 15, (random.randint(1,4)), 50, 10, p1) 
+    boss = enemy("big "+ enemy_names[(random.randint(0,4))] + " monster", 8, 15, (random.randint(1,4)), 30, 10, p1) 
     strength_potion = item("strength potion", 15, 3, "increases strength by 5. Can be used 3 times.", 5)
     health_potion = item("health potion", 20, 5, "increases health by 5. Can be used 5 times.", 5)
     cookie = item("cookie", 2, 1, "increases health by 3. Can be used once.", 3)
     sword = item("sword", 8, 1, "increases strength by 5. Can be used once.", 5)
     health_spell = item("health spell", 50, 10, "increases health by 7. Can be used 10 times.", 7)
-    luck_potion = special_item("luck potion", 1, 10, "increases health by a random amount from 1-10. Can be used 10 times.", 1)
+    luck_potion = special_item("luck potion", 30, 10, "increases health by a random amount between 1-10. Can be used 10 times.", 1)
     #luck_potion.rand_amount()
     
     battling = True
